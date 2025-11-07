@@ -1,6 +1,7 @@
 #include "fonction.h"
+#include <math.h>
+#include "utils.h"
 
-// Création d'une cellule
 cellule* creerCellule(int arrivee, float proba) {
     cellule* newCell = (cellule*) malloc(sizeof(cellule));
     if (!newCell) {
@@ -13,14 +14,12 @@ cellule* creerCellule(int arrivee, float proba) {
     return newCell;
 }
 
-// Création d'une liste vide
 liste creerListeVide() {
     liste L;
     L.head = NULL;
     return L;
 }
 
-// Ajout d'une cellule à une liste
 void ajouterCellule(liste *L, int arrivee, float proba) {
     cellule *courant = L->head;
 
@@ -39,7 +38,6 @@ void ajouterCellule(liste *L, int arrivee, float proba) {
     L->head = newCell;
 }
 
-// Affichage d'une liste
 void afficherListe(liste L) {
     cellule* courant = L.head;
     printf("[head @]");
@@ -50,7 +48,6 @@ void afficherListe(liste L) {
     printf("\n");
 }
 
-// Création d'une liste d'adjacence vide
 liste_adjacence creerListeAdjacenceVide(int taille) {
     liste_adjacence G;
     G.taille = taille;
@@ -65,7 +62,6 @@ liste_adjacence creerListeAdjacenceVide(int taille) {
     return G;
 }
 
-// Lecture du fichier et création du graphe
 liste_adjacence readGraph(const char *filename) {
     FILE *file = fopen(filename, "r");
     if (!file) {
@@ -84,11 +80,11 @@ liste_adjacence readGraph(const char *filename) {
     int depart, arrivee;
     float proba;
 
-    // Lecture ligne par ligne (ignore les lignes vides)
+    // Lecture ligne par ligne sans compter les lignes vides.
     while (!feof(file)) {
         char buffer[128];
         if (!fgets(buffer, sizeof(buffer), file))
-            break; // fin du fichier
+            break;
 
         if (sscanf(buffer, "%d %d %f", &depart, &arrivee, &proba) == 3) {
             if (depart < 1 || depart > nbvert || arrivee < 1 || arrivee > nbvert) {
@@ -104,7 +100,6 @@ liste_adjacence readGraph(const char *filename) {
 }
 
 
-// Affichage complet du graphe
 void afficherListeAdjacence(liste_adjacence G) {
     for (int i = 0; i < G.taille; i++) {
         printf("Liste pour le sommet %d: ", i + 1);
@@ -112,7 +107,6 @@ void afficherListeAdjacence(liste_adjacence G) {
     }
 }
 
-#include <math.h>  // Pour fabs() si tu veux comparer plus finement
 
 void verifierGrapheMarkov(liste_adjacence G) {
     int est_markov = 1; // 1 = vrai, 0 = faux
@@ -134,15 +128,12 @@ void verifierGrapheMarkov(liste_adjacence G) {
         }
     }
 
-    // Résultat global
     if (est_markov)
         printf("Le graphe est un graphe de Markov\n");
     else
         printf("Le graphe n'est pas un graphe de Markov\n");
 }
 
-// Générer le fichier Mermaid
-#include "utils.h"  // pour getID
 void ecrireMermaid(liste_adjacence G, const char *filename) {
     FILE *file = fopen(filename, "w");
     if (!file) {
@@ -155,17 +146,17 @@ void ecrireMermaid(liste_adjacence G, const char *filename) {
 
     // Déclaration des sommets
     for (int i = 0; i < G.taille; i++) {
-        fprintf(file, "%c((%d))\n", getID(i), i + 1);
+        fprintf(file, "%s((%d))\n", getID(i + 1), i + 1);
     }
 
     // Arêtes
     for (int i = 0; i < G.taille; i++) {
-        cellule *tmp = G.tab[i];
+        cellule *tmp = G.tab[i].head;
         while (tmp) {
-            int depart = i;              // index du sommet actuel
-            int arrivee = tmp->arrivee - 1; // convertir numéro de sommet → index
+            int depart = i + 1;
+            int arrivee = tmp->sommet_arrivee;
 
-            fprintf(file, "%c -->|%.2f| %c\n",
+            fprintf(file, "%s -->|%.2f| %s\n",
                     getID(depart), tmp->proba, getID(arrivee));
 
             tmp = tmp->suiv;
