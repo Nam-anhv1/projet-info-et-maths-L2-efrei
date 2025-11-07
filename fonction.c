@@ -1,6 +1,7 @@
 #include "fonction.h"
 #include <math.h>
 #include "utils.h"
+#include <string.h>
 
 cellule* creerCellule(int arrivee, float proba) {
     cellule* newCell = (cellule*) malloc(sizeof(cellule));
@@ -115,13 +116,11 @@ void verifierGrapheMarkov(liste_adjacence G) {
         float somme = 0.0f;
         cellule *courant = G.tab[i].head;
 
-        // Calcul de la somme des probabilités sortantes du sommet i
         while (courant != NULL) {
             somme += courant->proba;
             courant = courant->suiv;
         }
 
-        // Vérification de la condition
         if (somme < 0.99f || somme > 1.01f) {
             printf("La somme des probabilites du sommet %d est %.2f\n", i + 1, somme);
             est_markov = 0;
@@ -141,7 +140,12 @@ void ecrireMermaid(liste_adjacence G, const char *filename) {
         return;
     }
 
-    fprintf(file, "---\nconfig:\n layout: elk\n theme: neo\n look: neo\n---\n");
+    fprintf(file, "---\n");
+    fprintf(file, "config:\n");
+    fprintf(file, "  layout: elk\n");
+    fprintf(file, "  theme: neo\n");
+    fprintf(file, "  look: neo\n");
+    fprintf(file, "---\n");
     fprintf(file, "flowchart LR\n");
 
     // Déclaration des sommets
@@ -149,20 +153,26 @@ void ecrireMermaid(liste_adjacence G, const char *filename) {
         fprintf(file, "%s((%d))\n", getID(i + 1), i + 1);
     }
 
-    // Arêtes
+    // Déclaration des arêtes
     for (int i = 0; i < G.taille; i++) {
-        cellule *tmp = G.tab[i].head;
-        while (tmp) {
-            int depart = i + 1;
-            int arrivee = tmp->sommet_arrivee;
+        cellule *courant = G.tab[i].head;
+        while (courant != NULL) {
+            // COPIER les IDs dans des variables locales
+            char id_depart[10];
+            char id_arrivee[10];
 
-            fprintf(file, "%s -->|%.2f| %s\n",
-                    getID(depart), tmp->proba, getID(arrivee));
+            strcpy(id_depart, getID(i + 1));
+            strcpy(id_arrivee, getID(courant->sommet_arrivee));
 
-            tmp = tmp->suiv;
+            fprintf(file, "%s -->|%.2f|%s\n",
+                    id_depart,
+                    courant->proba,
+                    id_arrivee);
+
+            courant = courant->suiv;
         }
     }
 
     fclose(file);
-    printf("Fichier Mermaid genere : %s\n", filename);
+    printf("Fichier Mermaid généré : %s\n", filename);
 }
