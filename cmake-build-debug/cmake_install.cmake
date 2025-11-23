@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/bonne/CLionProjects/projet-info-et-maths-L2-efrei
+# Install script for directory: C:/Users/naman/CLionProjects/projet-info-et-maths-L2-efrei
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -52,6 +52,6 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-  file(WRITE "C:/Users/bonne/CLionProjects/projet-info-et-maths-L2-efrei/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+  file(WRITE "C:/Users/naman/CLionProjects/projet-info-et-maths-L2-efrei/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()

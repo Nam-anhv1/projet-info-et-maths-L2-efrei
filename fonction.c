@@ -174,5 +174,5 @@ void ecrireMermaid(liste_adjacence G, const char *filename) {
     }
 
     fclose(file);
-    printf("Fichier Mermaid généré : %s\n", filename);
+    printf("Fichier Mermaid genere : %s\n", filename);
 }
