@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include "tarjan.h"
 
-// ---------- utilitaires partition / classes ----------
-
 static t_classe creerClasseVide(void) {
     t_classe c;
     c.size = 0;
@@ -63,7 +61,7 @@ void libererPartition(t_partition *p) {
     p->size = p->capacity = 0;
 }
 
-// ---------- affichage ----------
+//affichage
 
 void afficherPartition(const t_partition *p) {
     for (int i = 0; i < p->size; ++i) {
@@ -76,7 +74,7 @@ void afficherPartition(const t_partition *p) {
     }
 }
 
-// ---------- Tarjan ----------
+//Tarjan
 
 t_tarjan_vertex *init_tarjan_vertices(liste_adjacence G) {
     int n = G.taille;
@@ -94,7 +92,7 @@ t_tarjan_vertex *init_tarjan_vertices(liste_adjacence G) {
     return V;
 }
 
-// Sous-fonction 'parcours' (DFS de Tarjan)
+// Sous-fonction elle parcours (DFS de Tarjan)
 static void parcours(int v,
                      liste_adjacence G,
                      t_tarjan_vertex *V,
@@ -115,19 +113,17 @@ static void parcours(int v,
     while (courant != NULL) {
         int w = courant->sommet_arrivee - 1; // -> index 0..n-1
         if (V[w].num == -1) {
-            // w non encore visité
             parcours(w, G, V, index, stack, stack_size, p, sommet_vers_classe);
             if (V[w].lowlink < V[v].lowlink)
                 V[v].lowlink = V[w].lowlink;
         } else if (V[w].on_stack) {
-            // w est dans la pile
             if (V[w].num < V[v].lowlink)
                 V[v].lowlink = V[w].num;
         }
         courant = courant->suiv;
     }
 
-    // Si v est racine d'une CFC
+    // Vérif si v est racine d'une CFC
     if (V[v].lowlink == V[v].num) {
         t_classe c = creerClasseVide();
 
@@ -140,7 +136,7 @@ static void parcours(int v,
 
         int idx_classe = ajouterClasse(p, c);
 
-        // mise à jour du tableau sommet -> classe
+        // Maj du tableau sommet vers classe
         for (int i = 0; i < p->classes[idx_classe].size; ++i) {
             int sommet = p->classes[idx_classe].vertices[i]; // 1..n
             sommet_vers_classe[sommet - 1] = idx_classe;
@@ -162,7 +158,7 @@ t_partition tarjan(liste_adjacence G, int *sommet_vers_classe) {
     int stack_size = 0;
     int index = 0;
 
-    // initialisation tableau sommet -> classe
+    // initialisation tableau sommet vers clase
     for (int i = 0; i < n; ++i) sommet_vers_classe[i] = -1;
 
     // Lancement des parcours

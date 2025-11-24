@@ -33,7 +33,7 @@ void afficherListeAdjacence(liste_adjacence G);
 
 void verifierGrapheMarkov(liste_adjacence G);
 
-// écriture du graphe en Mermaid (état de départ)
+// écriture du graphe en Mermaid
 void ecrireMermaid(liste_adjacence G, const char *nomFichier);
 
 #endif

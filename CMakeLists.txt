@@ -3,4 +3,4 @@ project(Projet_VO_THANH_MEZIOU_BONNEFOY C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(Projet_VO_THANH_MEZIOU_BONNEFOY main.c fonction.c utils.c tarjan.c hasse.c)
+add_executable(Projet_VO_THANH_MEZIOU_BONNEFOY main.c fonction.c utils.c tarjan.c hasse.c matrix.c)
